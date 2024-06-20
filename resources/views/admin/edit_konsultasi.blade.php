@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
     @include('admin.css')
     <style type="text/css">
         label{
@@ -27,7 +27,7 @@
   </head>
   <body>
     <div class="container-scroller">
-        <div class="row p-0 m-0 proBanner" id="proBanner">
+        {{-- <div class="row p-0 m-0 proBanner" id="proBanner">
             <div class="col-md-12 p-0 m-0">
             <div class="card-body card-body-padding d-flex align-items-center justify-content-between">
                 <div class="ps-lg-1">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-      </div>
+      </div> --}}
       <!-- partial:partials/_sidebar.html -->
       @include('admin.sidebar')
 
@@ -95,15 +95,18 @@
                                 <td>
                                     
                                     {{-- 2 form  edit dan delete--}}
-                                    {{-- edit menuju ke halaman baru dulu, barulah diupdate  --}}
-                                    <form action="{{ route('editdata_konsultasi') }}" style="display: inline-block;" method="POST">
-                                        @csrf                                        
+                                    {{-- edit menuju ke halaman baru dulu  --}}
+                                    <form action="{{ route('editdata_konsultasi', ['id' => $konsultasis->id]) }}" style="display: inline-block;" method="POST">
+                                        @csrf 
+                                        {{-- @method('PUT') --}}
                                         <div style="padding:5px;">
                                             <input type="number" name="idkonsultasi" value="{{ $konsultasis->id }}" style="display:none">
+                                            
                                             <input type="submit" value="Edit" class="btn btn-primary">
                                         </div>
                                     </form>
 
+                                    {{-- <a href="{{ route('editdata_konsultasi', ['id' => $konsultasis->id]) }}" class="btn btn-primary">Edit</a> --}}
                                     <form action="{{ route('hapus_konsultasi', ['id' => $konsultasis->id]) }}" style="display: inline-block;" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -135,9 +138,9 @@
       <!-- page-body-wrapper ends -->
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
 
     @include('admin.script')
   </body>

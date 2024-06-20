@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
     @include('user.head')
+    <style type="text/css">
+      .btn-success, .btn-primary{
+        font-size: 13px;
+        cursor: pointer;
+        border-radius: 4px;
+        width: auto;
+        height: auto;
+        padding: 6px 10px; /* Minimal padding */
+    }
+    </style>
 </head>
 <body>
 
@@ -123,7 +133,7 @@
   </div>
 
 
-  <div class="container-lg" style="margin: 0 auto;">
+  <div class="container-lg" style="margin: 0 auto; padding-bottom: 70px">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -134,6 +144,7 @@
                 <th scope = "col">Waktu</th>
                 <th scope = "col">Ruang</th>
                 <th scope = "col">Status Booking</th>
+                <th scope = "col" style="text-align: center;">Detail</th>
             </tr>
         </thead>
         <tbody>
@@ -148,11 +159,28 @@
                     <td>{{ $riwayats->waktu }}</td>
                     <td>{{ $riwayats->ruang }}</td>
                     <td>{{ $riwayats->status_booking }}</td>
+                    <td>
+                      @if($riwayats->status_booking == 'Disetujui')
+                      <form action="" style="display: inline-block;" method="POST">
+                        @csrf 
+                        <div style="padding:5px;">
+                            {{-- <input type="number" name="idkonsultasi" value="{{ $konsultasis->id }}" style="display:none"> --}}
+                            
+                            <input type="submit" value="Transaksi" class="btn btn-primary">
+                        </div>
+                      </form>
 
-                    {{-- @if ($konsultasi->status != 'Tersedia')
-                        <td>Kosong</td>
-                    @else --}}
-                    
+                      <form action="" style="display: inline-block;" method="POST">
+                        @csrf 
+                        {{-- @method('PUT') --}}
+                        <div style="padding:5px;">
+                            {{-- <input type="number" name="idkonsultasi" value="{{ $konsultasis->id }}" style="display:none"> --}}
+                            
+                            <input type="submit" value="Resep" class="btn btn-primary">
+                        </div>
+                      </form>
+                      @endif
+                    </td>
                     
                 </tr>
                 @endif

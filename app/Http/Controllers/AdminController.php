@@ -9,6 +9,7 @@ use App\Models\Dokter;
 use App\Models\Jenis_konsultasi;
 use App\Models\Konsultasi;
 use App\Models\Riwayat;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -79,12 +80,16 @@ class AdminController extends Controller
     public function uploadkonsultasi(Request $request){
         $konsultasi = new Konsultasi;
         
-        $konsultasi->id_antrian = $request->id_antrian;
+        $validatedData = $request->validate([
+            'id_antrian' => 'required|unique:konsultasis,id_antrian',
+        ]);
+
+        $konsultasi->id_antrian = $validatedData['id_antrian'];
         $konsultasi->nama_konsultasi = $request->nama_konsultasi;
         $konsultasi->nama_dokter = $request->nama_dokter;
         $konsultasi->tanggal = $request->tanggal;
         $konsultasi->waktu = $request->waktu;
-        $konsultasi->harga = $request->harga;
+        // $konsultasi->harga = $request->harga;
         $konsultasi->ruangan = $request->ruangan;
         $konsultasi->status = 'Tersedia';
 
@@ -119,7 +124,6 @@ class AdminController extends Controller
         $id = $request->input('idriwayat');
         $riwayat = Riwayat::find($id);
 
-        // Where lebih fleksibel
         $id_antrian = $request->input('idantripalsu');
         $konsultasi = Konsultasi::where('id_antrian', $id_antrian)->first();
         // dd($konsultasi);
@@ -141,11 +145,55 @@ class AdminController extends Controller
 
     public function editkonsultasi(){
         $konsultasi = Konsultasi::all();
+        // $riwayat = Riwayat::all();
         return view('admin.edit_konsultasi', compact('konsultasi'));
     }
 
-    public function editdatakonsultasi(Request $request){
+    public function editdatakonsultasi(Request $request, $id){
+        $dokter = Dokter::all();
+        $jenis_konsultasi = Jenis_konsultasi::all();
+    
+
+    //    $id = $request->input('idkonsultasi');
+       $konsultasi = Konsultasi::findOrFail($id);
+       
+    //    $idra = $request->input('idriwayatantri'); 
+    //    $riwayat = Riwayat::where('id_antrian', $idra)->first();
+
+       return view('admin.editdata_konsultasi', compact('konsultasi', 'dokter', 'jenis_konsultasi'));
+
+    }
+
+    public function mengeditkonsultasi(Request $request, $id){
+        
         // mengubah 2 tabel, histori dan konsultasi
+        $konsultasi = Konsultasi::findOrFail($id);
+        
+        // riwayat mengambil id_antrian dari tabel konsultasi. karena id antrian pada tabel konsultasi dan riwayat sama
+        $idriwayatantri = $request->input('id_antrian');
+        $riwayat = Riwayat::where('id_antrian',$idriwayatantri)->first();
+          
+        $konsultasi->update([
+            'id_antrian' => $request->input('id_antrian'),
+            'nama_konsultasi' => $request->input('nama_konsultasi'),
+            'nama_dokter' => $request->input('nama_dokter'),
+            'tanggal' => $request->input('tanggal'),
+            'waktu' => $request->input('waktu'),
+            'ruangan' => $request->input('ruangan'),
+        ]);
+
+        if($riwayat){
+            $riwayat->id_antrian = $request->input('id_antrian');
+            $riwayat->nama_konsultasi = $request->input('nama_konsultasi');
+            $riwayat->nama_dokter = $request->input('nama_dokter');
+            $riwayat->tanggal = $request->input('tanggal');
+            $riwayat->waktu = $request->input('waktu');
+            $riwayat->ruang = $request->input('ruangan');
+            $riwayat->save();
+        }
+
+        // Redirect back with a success message
+        return redirect()->route('edit_konsultasi')->with('message', 'Data konsultasi berhasil diperbarui!');
     }
 
     public function hapuskonsultasi($id){

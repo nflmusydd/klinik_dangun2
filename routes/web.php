@@ -28,22 +28,28 @@ Route::middleware('auth')->group(function () {
 // Tanpa menggunakan middleware, hanya menggunakan if else
 Route::get('/home', [HomeController::class, 'redirect'])->name('home');
 
-Route::get('/add_doctor_view', [AdminController::class, 'addview'])->middleware(['auth','admin']);
-Route::post('/upload_doctor', [AdminController::class, 'upload'])->middleware(['auth','admin']);
-
-Route::get('/add_jenis_konsultasi', [AdminController::class, 'addjeniskonsultasi'])->middleware(['auth','admin']);
-Route::post('/upload_jenis_konsultasi', [AdminController::class, 'uploadjeniskonsultasi'])->middleware(['auth','admin']);
-
-Route::get('/add_konsultasi', [AdminController::class, 'addkonsultasi'])->middleware(['auth','admin']);
-Route::post('/upload_konsultasi', [AdminController::class, 'uploadkonsultasi'])->middleware(['auth','admin']);
-
-Route::get('/kelola_konsultasi', [AdminController::class, 'kelolakonsultasi'])->middleware(['auth','admin']);
-Route::post('/setujui_konsultasi', [AdminController::class, 'setujuikonsultasi'])->middleware(['auth','admin'])->name('setujui_konsultasi');
-Route::post('/tolak_konsultasi', [AdminController::class, 'tolakkonsultasi'])->middleware(['auth','admin'])->name('tolak_konsultasi');
-
-Route::get('/edit_konsultasi', [AdminController::class, 'editkonsultasi'])->middleware(['auth','admin']);
-Route::post('/editdata_konsultasi', [AdminController::class, 'editdatakonsultasi'])->middleware(['auth','admin'])->name('editdata_konsultasi');
-Route::delete('/hapus_konsultasi/{id}', [AdminController::class, 'hapuskonsultasi'])->middleware(['auth','admin'])->name('hapus_konsultasi');
+Route::middleware(['auth', 'admin'])->group(function () {
+    
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/add_doctor_view', 'addview');
+        Route::post('/upload_doctor', 'upload');
+        
+        Route::get('/add_jenis_konsultasi', 'addjeniskonsultasi');
+        Route::post('/upload_jenis_konsultasi', 'uploadjeniskonsultasi');
+        
+        Route::get('/add_konsultasi', 'addkonsultasi');
+        Route::post('/upload_konsultasi', 'uploadkonsultasi');
+        
+        Route::get('/kelola_konsultasi', 'kelolakonsultasi');
+        Route::post('/setujui_konsultasi', 'setujuikonsultasi')->name('setujui_konsultasi');
+        Route::post('/tolak_konsultasi', 'tolakkonsultasi')->name('tolak_konsultasi');
+        
+        Route::get('/edit_konsultasi', 'editkonsultasi')->name('edit_konsultasi');
+        Route::post('/editdata_konsultasi/{id}', 'editdatakonsultasi')->name('editdata_konsultasi');
+        Route::post('/mengedit_konsultasi/{id}', 'mengeditkonsultasi')->name('mengedit_konsultasi');
+        Route::delete('/hapus_konsultasi/{id}', 'hapuskonsultasi')->name('hapus_konsultasi');
+    });
+});
 
 Route::get('/list_konsultasi', [HomeController::class, 'listkonsultasi']);
 Route::post('/pilih_konsultasi', [HomeController::class, 'pilihkonsultasi'])->name('pilih_konsultasi');
